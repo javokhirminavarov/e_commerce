@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from io import BytesIO
 from utils.utils import *
 
 st.set_page_config(layout="wide")
@@ -94,16 +93,11 @@ def main():
         
 
         # Download button
-        buffer = BytesIO()
-        df.to_excel(buffer, index=False)
-        buffer.seek(0)
-        excel_data = buffer.getvalue()
         st.download_button(
-            "📥 Excelga yuklash",
-            excel_data,
-            f"price_comparison_{product}.xlsx",
-            "application/vnd.ms-excel",
-            key='download-excel'
+            label="📥 Excelga yuklash",
+            data=df.to_csv(index=False).encode('utf-8'),
+            file_name="price_comparison.csv",
+            mime="text/csv"
         )
 
 if __name__ == "__main__":

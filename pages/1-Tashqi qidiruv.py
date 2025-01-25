@@ -1,4 +1,3 @@
-from io import BytesIO
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -96,17 +95,13 @@ def main():
             )
             
         # Download button
-        buffer = BytesIO()
-        df.to_excel(buffer, index=False)
-        buffer.seek(0)
-        excel_data = buffer.getvalue()
         st.download_button(
-            "📥 Excelga yuklash",
-            excel_data,
-            f"price_comparison_{product}.xlsx",
-            "application/vnd.ms-excel",
-            key='download-excel'
+            label="📥 Excelga yuklash",
+            data=df.to_csv(index=False).encode('utf-8'),
+            file_name="price_comparison.csv",
+            mime="text/csv"
         )
+
 if __name__ == "__main__":
     main()
 
