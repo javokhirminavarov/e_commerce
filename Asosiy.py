@@ -1,20 +1,16 @@
-from io import BytesIO
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from typing import Dict, List, Tuple
-import numpy as np
+from io import BytesIO
 from utils.utils import *
-from scipy.stats import gaussian_kde
-import plotly.graph_objects as go
+
 st.set_page_config(layout="wide")
 
 def main():
     st.title("Narxlarni taqqoshlash")
-    st.markdown("""
-    Elektron tijorat platformalaridagi tovarlar narxlari haqida ma'lumot olish.
-    """)
+    st.markdown("""Elektron tijorat platformalaridagi tovarlar narxlari haqida ma'lumot olish.""")
     
     # Show results if available
     if 'results' in st.session_state and not st.session_state['results'].empty:
@@ -25,16 +21,17 @@ def main():
         with col1:
             st.metric("Jami mahsulotlar soni", len(df), border=True)
         with col2:
-            st.metric("O'rtacha narx", f"${df['Price_USD'].mean():.2f}", border=True)
+            st.metric("Manbalar soni (tashqi)", f"{df['Source'].nunique()}", border=True)
         with col3:
-            st.metric("Minimum narx", f"${df['Price_USD'].min():.2f}", border=True)
+            st.metric("Manbalar soni (ichki)", f"{df['Source'].nunique()}", border=True)
         with col4:
             st.metric("Maksimum narx", f"${df['Price_USD'].max():.2f}", border=True)
         
 
         st.subheader("TOP 3 tovar narxlari taqsimoti (tashqi)")
         selected_sources_e = st.pills("Manbani tanlash", options=df['Source'].unique(), selection_mode='multi', default=df['Source'].unique())
-        df['Product'] = np.random.choice(['iPhone', 'Shoes', 'Airpods', 'Samsung tv', 'Mouse'], size=len(df))
+        
+        df['Product'] = np.random.choice(['Airpods', 'Samsung tv', 'Mouse'], size=len(df))
         product_types = df['Product'].unique()
 
         # Create columns
@@ -53,7 +50,7 @@ def main():
 
         st.subheader("TOP 3 tovar narxlari taqsimoti (ichki)")
         selected_sources_i = st.pills("Manbani tanlash", options=df['Source'].unique(), selection_mode='multi', default=df['Source'].unique(), key='ichki_pills')
-        df['Product'] = np.random.choice(['iPhone', 'Shoes', 'Airpods', 'Samsung tv', 'Mouse'], size=len(df))
+        df['Product'] = np.random.choice(['Airpods', 'Samsung tv', 'Mouse'], size=len(df))
         product_types = df['Product'].unique()
 
         # Create columns
