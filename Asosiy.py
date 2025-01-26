@@ -1,5 +1,5 @@
-# import pip
-# pip.main(['install', 'plotly', 'bs4', 'scipy'])
+import pip
+pip.main(['install', 'plotly', 'bs4', 'scipy'])
 
 import streamlit as st
 import pandas as pd
