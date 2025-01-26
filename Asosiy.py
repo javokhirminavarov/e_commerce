@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from utils.utils import *
 
-st.set_page_config(layout="wide", page_title="Narxlarni taqqoshlash", page_icon="📈")
+st.set_page_config(layout="wide", page_title="iCommerce", page_icon="📈")
 
 def main():
     st.title("Narxlarni taqqoshlash")
