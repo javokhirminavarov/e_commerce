@@ -23,6 +23,9 @@ def main():
         with col2:
             max_price = st.number_input("Max narx ($)", 10000.0)
         
+        # Variable to store search results
+        search_results = None
+        
         if st.button("🔍 Qidirish", use_container_width=True):
             if not product:
                 st.error("Mahsulot nomini kiriting")
@@ -42,23 +45,21 @@ def main():
                         if df.empty:
                             st.error("Ma'lumot topilmadi. Qidiruv parametrlarini o'zgartiring")
                         else:
-                            st.session_state['results'] = df
+                            search_results = df
                             st.success(f"{len(df)} ta mashulot topildi!")
 
     # Show results if available
-    if 'results' in st.session_state and not st.session_state['results'].empty:
-        df = st.session_state['results']
-        
+    if search_results is not None and not search_results.empty:
         # Summary statistics
         col1, col2, col3, col4 = st.columns(4)
         with col1:
-            st.metric("Jami mahsulotlar soni", len(df), border=True)
+            st.metric("Jami mahsulotlar soni", len(search_results), border=True)
         with col2:
-            st.metric("O'rtacha narx", f"${df['Price_USD'].mean():.2f}", border=True)
+            st.metric("O'rtacha narx", f"${search_results['Price_USD'].mean():.2f}", border=True)
         with col3:
-            st.metric("Minimum narx", f"${df['Price_USD'].min():.2f}", border=True)
+            st.metric("Minimum narx", f"${search_results['Price_USD'].min():.2f}", border=True)
         with col4:
-            st.metric("Maksimum narx", f"${df['Price_USD'].max():.2f}", border=True)
+            st.metric("Maksimum narx", f"${search_results['Price_USD'].max():.2f}", border=True)
         
         # Visualizations 
         tab1, tab2, tab3 = st.tabs(["Narx taqsimoti", "Narx manba kesimida", "To'liq jadval"])
@@ -67,10 +68,10 @@ def main():
             source_types = df['Source'].unique()
 
             # Create columns
-            columns = st.columns(3)
+            columns = st.columns(2)
 
             # Iterate through columns      
-            for i, source in enumerate(source_types[:3]):
+            for i, source in enumerate(source_types[:2]):
                 with columns[i]:
                     source_data = df[(df['Source'] == source)]['Price_USD'].dropna()
                     if not source_data.empty:
@@ -88,6 +89,7 @@ def main():
             st.plotly_chart(fig, use_container_width=True)
             
         with tab3:
+            df['Price_USD'] = df['Price_USD'].round(1)
             st.dataframe(
                 df[['Title', 'Price_USD', 'Currency', 'Source']]
                 .sort_values('Price_USD'),
@@ -96,7 +98,7 @@ def main():
             
         # Download button
         st.download_button(
-            label="📥 Excelga yuklash",
+            label="📥 CSVga yuklash",
             data=df.to_csv(index=False).encode('utf-8'),
             file_name="price_comparison.csv",
             mime="text/csv"
@@ -104,13 +106,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# st.link_button("Go to gallery", "https://streamlit.io/gallery")
-
-# st.dataframe(
-#     df,
-#     column_config={
-#         "website": st.column_config.LinkColumn()
-#     }
-# )
