@@ -1,6 +1,3 @@
-import pip
-pip.main(['install', 'plotly', 'bs4', 'scipy'])
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -8,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from utils.utils import *
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", theme="dark")
 
 def main():
     st.title("Narxlarni taqqoshlash")
